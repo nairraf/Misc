@@ -1,9 +1,10 @@
-function DoChoice()
+function DoChoice($folders)
 {
     Clear-Host
     Write-Host "Using VENV dir:"  $Env:VENV
     Write-Host ""
     Write-Host -ForegroundColor "Yellow" "Which Python Environment do you want to activate?"
+    Write-Host "    D  -   No VENV (System Default Python)"
     for ($i = 0; $i -lt $folders.Count; $i++)
     {
         $index = $i+1
@@ -15,16 +16,22 @@ function DoChoice()
 }
 
 # main
-if ($Env:VENV -ne "" -and $Env:VENV -ne $null)
+if ($Env:VENV -ne "" -and $null -ne $Env:VENV)
 {
     $folders = (Get-ChildItem $Env:VENV)
 
     While ($true)
     {
-        $choice = DoChoice
+        $choice = DoChoice $folders
         if ($choice -gt 0 -and $choice -le $folders.Count)
         {
             break
+        }
+
+        if ($choice.ToLower() -eq "d")
+        {
+            $host.ui.RawUI.WindowTitle = "VENV Shell - Default"
+            exit
         }
     }
 
@@ -34,6 +41,8 @@ if ($Env:VENV -ne "" -and $Env:VENV -ne $null)
         Write-Host ""
         Write-Host "Now Invoking: $script"
         . $script
+        $host.ui.RawUI.WindowTitle = "VENV Shell - $($folders[$choice-1].BaseName)"
+        exit
     } else {
         Write-Host -ForegroundColor "Red" "Python powershell activation script not found!"
         Write-Host "Please make sure the VENV is OK and that the following script exists:"
@@ -49,4 +58,3 @@ if ($Env:VENV -ne "" -and $Env:VENV -ne $null)
     Write-Host "   It should point to the base directory where all your python virtual environments exist"
     Write-Host ""
 }
-
