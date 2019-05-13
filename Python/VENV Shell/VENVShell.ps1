@@ -40,7 +40,10 @@ function GetChoices()
         {
             $index += 1
             $venvName = $folder.BaseName
-            $version = ((Get-ItemProperty $pythonEXE).VersionInfo).ProductVersion
+            ## Python 2.7 doesn't set version info in the exe? so we must call python and get the version
+            #$version = ((Get-ItemProperty $pythonEXE).VersionInfo).ProductVersion
+            $version = (((& $pythonEXE "--version") 2>&1).ToString().Split(" "))[1]
+            
             
             # store this python env
             $script:PyEnvironments += @{
@@ -135,7 +138,7 @@ function Set-Python()
 
             if ($curChoice["Type"] -eq "System")
             {
-                $ENV:Path = "$($curChoice['Path']);" + $ENV:Path
+                $ENV:Path = "$($curChoice['Path']);$($curChoice['Path'])\Scripts;" + $ENV:Path
                 break
             }
 
