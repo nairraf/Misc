@@ -3,11 +3,14 @@
 ## Overview
 
 VENV Shell is a minimalistic way of opening a python Shell for a specific `VENV`.
-All that is needed is to create an environment varible called `VENV` that points
-to the parent directory where all your `VENV`'s are created.
+All that is needed is to create an environment varible called `PYTHON_VENV` that points
+to the parent directory where all your `VENV`'s are created and another called `PYTHON_BASE`
+pointing to the base directory where all your python versions are installed.
 
-**Example**: Let's say all your Python `VENV`'s are created in `C:\Python\VENV`.
-Create an environment varialble called `VENV` pointing to `C:\Python\VENV`
+**Example**: Let's say all your Python `VENV`'s are created in `C:\Python\VENV` and all your
+Python installation are in C:\Python (Example: 'C:\Python\Python2.7_32', 'C:\Python\Python3_64').
+Create an environment varialble called `PYTHON_VENV` pointing to `C:\Python\VENV`
+and PYTHON_BASE pointing to C:\Python.
 
 The script detects all the virtual environment in that location, and prompts you
 with a simple menu to activate one of them. This way you can easily open as many
