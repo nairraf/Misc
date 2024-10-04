@@ -294,6 +294,7 @@ while ($true){
     try {
         $selection = [int]$uinput
         $galaxyName = $galaxies[$selection]
+        $galaxyShortName = $galaxyName.Split('.')[1].Trim()
         "you selected: $galaxyName"
         $confirm = (Read-Host "Is this correct [y/n]?").ToLower()
         if ($confirm -eq 'y') {
@@ -308,10 +309,10 @@ while ($true){
 "you selected: $galaxyName"
 
  # regenerating the anotation image
- magick.exe -size 400x100 xc:none -font Candice -pointsize 30 `
- -stroke black -strokewidth 8 -annotate +25+65 $galaxyName -blur 0x8 `
- -fill white   -stroke none   -annotate +25+65 $galaxyName `
- "$screenShotAnnotatePath\anotate.png"
+ magick.exe -size 400x80 xc:none -font Cascadia-Mono-Regular -pointsize 30 `
+ -stroke black -strokewidth 8 -gravity East -annotate +10+5 $galaxyShortName -blur 0x8 `
+ -fill white   -stroke none   -gravity East -annotate +10+5 $galaxyShortName `
+ "$screenShotAnnotatePath\annotate.png"
 
 
 
@@ -328,8 +329,8 @@ while ($true){
         }
     
         Write-Host "Annotating $($pic.Name).."
-        magick.exe composite -gravity NorthEast `
-        "$screenShotAnnotatePath\anotate.png" $pic.FullName "$screenShotAnnotatePath\$($pic.Name)"
+        magick.exe composite -gravity NorthEast -geometry +10+0 `
+        "$screenShotAnnotatePath\annotate.png" $pic.FullName "$screenShotAnnotatePath\$($pic.Name)"
         magick.exe "$screenShotAnnotatePath\$($pic.Name)" -border 5  "$screenShotAnnotatePath\$($pic.Name)"
     
     }
