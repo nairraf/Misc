@@ -1,5 +1,6 @@
 $screenShotPath = "D:\Program Files\Steam\userdata\86443413\760\remote\275850\screenshots"
 $screenShotAnnotatePath = "$screenShotPath\Annotated"
+$SecondsToSleep = 15
 
 if (-not(Test-Path -Path $screenShotAnnotatePath -PathType Container)) {
     New-Item -ItemType Directory -Path $screenShotAnnotatePath | Out-Null
@@ -334,9 +335,11 @@ while ($true){
         magick.exe "$screenShotAnnotatePath\$($pic.Name)" -border 5  "$screenShotAnnotatePath\$($pic.Name)"
     
     }
-    "sleeping for 10 seconds"
+    ""
+    "Galaxy Selection: $galaxyName"
+    "sleeping for a bit"
     "press ctrl-c to exit"
-    Start-Sleep -Seconds 10
+    Start-Sleep -Seconds $SecondsToSleep
 }
 
     
