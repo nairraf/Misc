@@ -1,6 +1,10 @@
 $screenShotPath = "D:\Program Files\Steam\userdata\86443413\760\remote\275850\screenshots"
-$screenShotAnnotatePath = "$screenShotPath\Annotated"
+$addPlayerName = $false
+$playerName = "Quol"
 $SecondsToSleep = 15
+
+# do not edit anything below this line
+$screenShotAnnotatePath = "$screenShotPath\Annotated"
 
 if (-not(Test-Path -Path $screenShotAnnotatePath -PathType Container)) {
     New-Item -ItemType Directory -Path $screenShotAnnotatePath | Out-Null
@@ -295,7 +299,7 @@ while ($true){
     try {
         $selection = [int]$uinput
         $galaxyName = $galaxies[$selection]
-        $galaxyShortName = $galaxyName.Split('.')[1].Trim()
+        $galaxyShortName = $galaxyName.Split('.')[1].Trim() + " Galaxy"
         "you selected: $galaxyName"
         $confirm = (Read-Host "Is this correct [y/n]?").ToLower()
         if ($confirm -eq 'y') {
@@ -310,12 +314,18 @@ while ($true){
 "you selected: $galaxyName"
 
  # regenerating the anotation image
- magick.exe -size 400x80 xc:none -font Cascadia-Mono-Regular -pointsize 30 `
+ magick.exe -size 500x80 xc:none -font Cascadia-Mono-Regular -pointsize 30 `
  -stroke black -strokewidth 8 -gravity East -annotate +10+5 $galaxyShortName -blur 0x8 `
  -fill white   -stroke none   -gravity East -annotate +10+5 $galaxyShortName `
- "$screenShotAnnotatePath\annotate.png"
+ "$screenShotAnnotatePath\annotate-galaxy.png"
 
-
+ # regenerate the player name image
+ if ($addPlayerName) {
+     magick.exe -size 400x80 xc:none -font Cascadia-Mono-Regular -pointsize 30 `
+     -stroke black -strokewidth 8 -gravity West -annotate +10+5 $playerName -blur 0x8 `
+     -fill white   -stroke none   -gravity West -annotate +10+5 $playerName `
+     "$screenShotAnnotatePath\annotate-player.png"
+ }
 
 while ($true){
     ""
@@ -330,8 +340,17 @@ while ($true){
         }
     
         Write-Host "Annotating $($pic.Name).."
+        # overlay the galaxy image
         magick.exe composite -gravity NorthEast -geometry +10+0 `
-        "$screenShotAnnotatePath\annotate.png" $pic.FullName "$screenShotAnnotatePath\$($pic.Name)"
+        "$screenShotAnnotatePath\annotate-galaxy.png" $pic.FullName "$screenShotAnnotatePath\$($pic.Name)"
+
+        if ($addPlayerName) {
+            # overlay the player image
+            magick.exe composite -gravity NorthWest -geometry +0+0 `
+            "$screenShotAnnotatePath\annotate-player.png" "$screenShotAnnotatePath\$($pic.Name)" "$screenShotAnnotatePath\$($pic.Name)"
+        }
+
+        # add the border
         magick.exe "$screenShotAnnotatePath\$($pic.Name)" -border 5  "$screenShotAnnotatePath\$($pic.Name)"
     
     }
